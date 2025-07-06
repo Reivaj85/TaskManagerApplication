@@ -32,7 +32,7 @@ public class TaskItem
     /// <param name="title">The title of the task</param>
     /// <param name="description">The description of the task</param>
     /// <returns>A Result containing the new TaskItem instance or error message</returns>
-    public static Result<TaskItem> Create(Guid projectId, string title, string description = "")
+    public static Result<TaskItem> New(Guid projectId, string title, string description = "")
     {
         if (projectId == Guid.Empty)
             return "Project ID cannot be empty.";
@@ -53,6 +53,30 @@ public class TaskItem
             createdAt: DateTime.UtcNow,
             isCompleted: false
         );
+    }
+    
+    public static Result<TaskItem> Create(
+        Guid id
+      , Guid projectId
+      , TaskTitle title
+      , TaskDescription description
+      , DateTime createdAt
+      , bool isCompleted)
+    {
+        if (id == Guid.Empty)
+            return "Task ID cannot be empty.";
+    
+        if (projectId == Guid.Empty)
+            return "Project ID cannot be empty.";
+    
+        if (string.IsNullOrEmpty(title))
+            return "Title cannot be null or empty.";
+        
+        if(createdAt == DateTime.MinValue)
+            return "CreatedAt cannot be the default value.";
+    
+        return new TaskItem(id: id, projectId: projectId, title: title, description: description, createdAt: createdAt
+                          , isCompleted: isCompleted);
     }
 
     /// <summary>

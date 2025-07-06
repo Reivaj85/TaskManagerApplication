@@ -61,14 +61,6 @@ public interface ITaskRepository
     Task DeleteAsync(Guid id);
 
     /// <summary>
-    /// Checks if a task belongs to a project owned by a specific user
-    /// </summary>
-    /// <param name="taskId">The task's ID</param>
-    /// <param name="userId">The user's ID</param>
-    /// <returns>True if the task belongs to the user, false otherwise</returns>
-    Task<bool> BelongsToUserAsync(Guid taskId, Guid userId);
-
-    /// <summary>
     /// Gets the count of tasks in a specific project
     /// </summary>
     /// <param name="projectId">The project's ID</param>

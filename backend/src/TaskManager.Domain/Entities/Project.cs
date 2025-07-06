@@ -30,7 +30,7 @@ public class Project
     /// <param name="name">The name of the project</param>
     /// <param name="isDefault">Whether this is the user's default project</param>
     /// <returns>A Result containing the new Project instance or error message</returns>
-    public static Result<Project> Create(Guid userId, string name, bool isDefault = false)
+    public static Result<Project> New(Guid userId, string name, bool isDefault = false)
     {
         if (userId == Guid.Empty)
             return "User ID cannot be empty.";
@@ -47,6 +47,26 @@ public class Project
             isDefault: isDefault
         );
     }
+    
+    public static Result<Project> Create(Guid id, Guid userId, string name, DateTime createdAt, bool isDefault)
+    {
+        if (id == Guid.Empty)
+            return "Project ID cannot be empty.";
+        if (userId == Guid.Empty)
+            return "User ID cannot be empty.";
+
+        var nameResult = ProjectName.Create(name);
+        if (nameResult.IsFailure)
+            return nameResult.Error;
+
+        return new Project(
+            id: id,
+            userId: userId,
+            name: nameResult.Value,
+            createdAt: createdAt,
+            isDefault: isDefault
+        );
+    }
 
     /// <summary>
     /// Factory method to create a default personal project for a new user
@@ -55,7 +75,7 @@ public class Project
     /// <returns>A Result containing the new default Project instance or error message</returns>
     public static Result<Project> CreateDefault(Guid userId)
     {
-        return Create(userId, "Personal", isDefault: true);
+        return New(userId, "Personal", isDefault: true);
     }
 
     /// <summary>

@@ -23,4 +23,17 @@ public readonly record struct PasswordHash
 
         return new PasswordHash(passwordHash);
     }
+
+    /// <summary>
+    /// Creates a PasswordHash from an existing hash string (for loading from database)
+    /// </summary>
+    /// <param name="hashedValue">The already hashed password value</param>
+    /// <returns>A Result containing the PasswordHash or error message</returns>
+    public static Result<PasswordHash> CreateFromHash(string hashedValue)
+    {
+        if (string.IsNullOrWhiteSpace(hashedValue))
+            return "Password hash cannot be null or empty.";
+
+        return new PasswordHash(hashedValue);
+    }
 }

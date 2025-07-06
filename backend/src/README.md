@@ -75,6 +75,9 @@ This project includes VS Code tasks for common operations:
 - Repository pattern for data access
 - Clean Architecture implementation
 - Comprehensive testing setup
+- SQLite database with automatic schema creation
+- Value objects with validation
+- Result pattern for error handling
 
 ## API Endpoints
 
@@ -109,7 +112,17 @@ The API will include the following endpoints:
 
 ### Database
 
-The application uses SQLite for development. The database will be created automatically when you first run the application.
+The application uses SQLite for development. The database will be created automatically when you first run the application with the following schema:
+
+- **Users**: User accounts with hashed passwords
+- **Projects**: User projects with default project support
+- **Tasks**: Tasks belonging to projects with completion status
+
+The Infrastructure layer includes:
+- Repository pattern implementations for each entity
+- Unit of Work pattern for transaction management
+- Database connection factory for dependency injection
+- Automatic database schema initialization
 
 ## Testing
 

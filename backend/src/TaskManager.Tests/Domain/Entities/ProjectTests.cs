@@ -14,7 +14,7 @@ public class ProjectTests
         var projectName = "My Test Project";
 
         // Act
-        var result = Project.Create(userId, projectName);
+        var result = Project.New(userId, projectName);
 
         // Assert
         Assert.True(result.IsSuccess);
@@ -36,7 +36,7 @@ public class ProjectTests
         var isDefault = true;
 
         // Act
-        var result = Project.Create(userId, projectName, isDefault);
+        var result = Project.New(userId, projectName, isDefault);
 
         // Assert
         Assert.True(result.IsSuccess);
@@ -55,8 +55,8 @@ public class ProjectTests
         var projectName2 = "Project 2";
 
         // Act
-        var project1 = Project.Create(userId, projectName1);
-        var project2 = Project.Create(userId, projectName2);
+        var project1 = Project.New(userId, projectName1);
+        var project2 = Project.New(userId, projectName2);
 
         // Assert
         Assert.True(project1.IsSuccess);
@@ -72,7 +72,7 @@ public class ProjectTests
         var projectName = "Test Project";
 
         // Act
-        var result = Project.Create(userId, projectName);
+        var result = Project.New(userId, projectName);
 
         // Assert
         Assert.True(result.IsFailure);
@@ -89,7 +89,7 @@ public class ProjectTests
         var userId = Guid.NewGuid();
 
         // Act
-        var result = Project.Create(userId, invalidName);
+        var result = Project.New(userId, invalidName);
 
         // Assert
         Assert.True(result.IsFailure);
@@ -104,7 +104,7 @@ public class ProjectTests
         var longProjectName = new string('a', 101); // Exceeds 100 character limit
 
         // Act
-        var result = Project.Create(userId, longProjectName);
+        var result = Project.New(userId, longProjectName);
 
         // Assert
         Assert.True(result.IsFailure);
@@ -175,7 +175,7 @@ public class ProjectTests
         var userId = Guid.NewGuid();
         var originalName = "Original Project";
         var newName = "Renamed Project";
-        var project = Project.Create(userId, originalName).Value;
+        var project = Project.New(userId, originalName).Value;
 
         // Act
         var result = project.Rename(newName);
@@ -194,7 +194,7 @@ public class ProjectTests
         // Arrange
         var userId = Guid.NewGuid();
         var originalName = "Original Project";
-        var project = Project.Create(userId, originalName).Value;
+        var project = Project.New(userId, originalName).Value;
 
         // Act
         var result = project.Rename(invalidName);
@@ -212,7 +212,7 @@ public class ProjectTests
         var userId = Guid.NewGuid();
         var originalName = "Original Project";
         var longName = new string('a', 101); // Exceeds 100 character limit
-        var project = Project.Create(userId, originalName).Value;
+        var project = Project.New(userId, originalName).Value;
 
         // Act
         var result = project.Rename(longName);
@@ -229,7 +229,7 @@ public class ProjectTests
         // Arrange
         var userId = Guid.NewGuid();
         var projectName = "Test Project";
-        var project = Project.Create(userId, projectName).Value;
+        var project = Project.New(userId, projectName).Value;
 
         // Act
         var result = project.Rename(projectName);
@@ -247,7 +247,7 @@ public class ProjectTests
         var originalName = "Original Project";
         var nameWithWhitespace = "  Trimmed Project  ";
         var expectedName = "Trimmed Project";
-        var project = Project.Create(userId, originalName).Value;
+        var project = Project.New(userId, originalName).Value;
 
         // Act
         var result = project.Rename(nameWithWhitespace);
@@ -267,7 +267,7 @@ public class ProjectTests
         // Arrange
         var userId = Guid.NewGuid();
         var projectName = "Test Project";
-        var project = Project.Create(userId, projectName, false).Value;
+        var project = Project.New(userId, projectName, false).Value;
 
         // Act
         project.MarkAsDefault();
@@ -282,7 +282,7 @@ public class ProjectTests
         // Arrange
         var userId = Guid.NewGuid();
         var projectName = "Test Project";
-        var project = Project.Create(userId, projectName, true).Value;
+        var project = Project.New(userId, projectName, true).Value;
 
         // Act
         project.UnmarkAsDefault();
@@ -299,7 +299,7 @@ public class ProjectTests
         var projectName = "Test Project";
 
         // Act
-        var project = Project.Create(userId, projectName).Value;
+        var project = Project.New(userId, projectName).Value;
 
         // Assert
         Assert.False(project.IsDefault);
@@ -317,7 +317,7 @@ public class ProjectTests
         var projectName = "Test Project";
 
         // Act
-        var project = Project.Create(userId, projectName).Value;
+        var project = Project.New(userId, projectName).Value;
 
         // Assert
         Assert.NotEqual(Guid.Empty, project.Id);
@@ -335,7 +335,7 @@ public class ProjectTests
         var beforeCreation = DateTime.UtcNow;
 
         // Act
-        var project = Project.Create(userId, projectName).Value;
+        var project = Project.New(userId, projectName).Value;
         var afterCreation = DateTime.UtcNow;
 
         // Assert
@@ -352,8 +352,8 @@ public class ProjectTests
         var projectName = "Test Project";
 
         // Act
-        var project1 = Project.Create(userId, projectName + "1").Value;
-        var project2 = Project.Create(userId, projectName + "2").Value;
+        var project1 = Project.New(userId, projectName + "1").Value;
+        var project2 = Project.New(userId, projectName + "2").Value;
 
         // Assert
         Assert.NotEqual(Guid.Empty, project1.Id);
@@ -369,7 +369,7 @@ public class ProjectTests
         var projectName = "Test Project";
 
         // Act
-        var project = Project.Create(userId, projectName).Value;
+        var project = Project.New(userId, projectName).Value;
 
         // Assert
         Assert.NotEqual(Guid.Empty, project.UserId);
@@ -389,8 +389,8 @@ public class ProjectTests
         var projectName = "Test Project";
 
         // Act
-        var project1 = Project.Create(userId1, projectName).Value;
-        var project2 = Project.Create(userId2, projectName).Value;
+        var project1 = Project.New(userId1, projectName).Value;
+        var project2 = Project.New(userId2, projectName).Value;
 
         // Assert
         Assert.Equal(userId1, project1.UserId);
@@ -407,8 +407,8 @@ public class ProjectTests
         var sameName = "Shared Project Name";
 
         // Act
-        var project1 = Project.Create(userId1, sameName);
-        var project2 = Project.Create(userId2, sameName);
+        var project1 = Project.New(userId1, sameName);
+        var project2 = Project.New(userId2, sameName);
 
         // Assert
         Assert.True(project1.IsSuccess);
@@ -430,7 +430,7 @@ public class ProjectTests
         var projectName = "Project @#$% & More!";
 
         // Act
-        var result = Project.Create(userId, projectName);
+        var result = Project.New(userId, projectName);
 
         // Assert
         Assert.True(result.IsSuccess);
@@ -445,7 +445,7 @@ public class ProjectTests
         var projectName = "Projeto Español 中文 العربية";
 
         // Act
-        var result = Project.Create(userId, projectName);
+        var result = Project.New(userId, projectName);
 
         // Assert
         Assert.True(result.IsSuccess);
@@ -460,7 +460,7 @@ public class ProjectTests
         var projectName = "123456";
 
         // Act
-        var result = Project.Create(userId, projectName);
+        var result = Project.New(userId, projectName);
 
         // Assert
         Assert.True(result.IsSuccess);
@@ -473,7 +473,7 @@ public class ProjectTests
         // Arrange
         var userId = Guid.NewGuid();
         var originalName = "Original";
-        var project = Project.Create(userId, originalName).Value;
+        var project = Project.New(userId, originalName).Value;
 
         // Act & Assert
         var result1 = project.Rename("First Rename");

@@ -48,18 +48,30 @@ public class User
             createdAt: DateTime.UtcNow
         );
     }
+    
+    public static Result<User> Create(Guid id, UserName username, PasswordHash passwordHash, DateTime createdAt) {
+        if ( id == Guid.Empty )
+            return "Id cannot be empty.";
+
+        if ( username == null )
+            return "Username cannot be null.";
+
+        if ( passwordHash == null )
+            return "Password hash cannot be null.";
+        
+        if ( createdAt == default )
+            return "CreatedAt cannot be default value.";
+
+        return new User(id, username, passwordHash, createdAt);
+    }
 
     /// <summary>
     /// Validates if the provided password matches the user's password
     /// </summary>
     /// <param name="password">The password to validate</param>
     /// <returns>True if the password is valid, false otherwise</returns>
-    public bool ValidatePassword(string password)
-    {
-        if (string.IsNullOrWhiteSpace(password))
-            return false;
-
-        return BCrypt.Net.BCrypt.Verify(password, PasswordHash);
+    public bool ValidatePassword(string password) {
+        return !string.IsNullOrWhiteSpace(password) && BCrypt.Net.BCrypt.Verify(password, PasswordHash);
     }
 
     /// <summary>
