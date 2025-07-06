@@ -1,0 +1,15 @@
+{
+    "files.exclude": {
+        "**/.git": true,
+        "**/.svn": true,
+        "**/.DS_Store": true,
+        "**/*.pyc": true,
+
+        "**/bin": true,
+        "**/obj": true,
+        "**/.vs": true,
+        "**/*.user": true,
+        "**/*.suo": true,
+        "**/packages": true
+    }
+}
