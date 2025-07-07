@@ -9,8 +9,7 @@ public class User
     public UserName UserName { get; private set; }
     public PasswordHash PasswordHash { get; private set; }
     public DateTime CreatedAt { get; private set; }
-
-    // Private constructor for deserialization
+    
     private User() { }
 
     private User(Guid id, UserName username, PasswordHash passwordHash, DateTime createdAt)

@@ -53,7 +53,7 @@ public class DatabaseInitializer
                 CreatedAt TEXT NOT NULL
             )";
 
-        using var command = new SqliteCommand(sql, (SqliteConnection)connection);
+        await using var command = new SqliteCommand(sql, (SqliteConnection)connection);
         await command.ExecuteNonQueryAsync();
     }
 
@@ -69,7 +69,7 @@ public class DatabaseInitializer
                 FOREIGN KEY (UserId) REFERENCES Users(Id) ON DELETE CASCADE
             )";
 
-        using var command = new SqliteCommand(sql, (SqliteConnection)connection);
+        await using var command = new SqliteCommand(sql, (SqliteConnection)connection);
         await command.ExecuteNonQueryAsync();
     }
 
@@ -86,7 +86,7 @@ public class DatabaseInitializer
                 FOREIGN KEY (ProjectId) REFERENCES Projects(Id) ON DELETE CASCADE
             )";
 
-        using var command = new SqliteCommand(sql, (SqliteConnection)connection);
+        await using var command = new SqliteCommand(sql, (SqliteConnection)connection);
         await command.ExecuteNonQueryAsync();
     }
 
@@ -103,7 +103,7 @@ public class DatabaseInitializer
 
         foreach (var indexSql in indexCommands)
         {
-            using var command = new SqliteCommand(indexSql, (SqliteConnection)connection);
+            await using var command = new SqliteCommand(indexSql, (SqliteConnection)connection);
             await command.ExecuteNonQueryAsync();
         }
     }

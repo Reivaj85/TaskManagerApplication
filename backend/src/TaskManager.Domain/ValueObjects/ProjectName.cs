@@ -24,13 +24,11 @@ public readonly record struct ProjectName
 
         var trimmedValue = value.Trim();
 
-        if (trimmedValue.Length < 1)
-            return "Project name must be at least 1 character long.";
-
-        if (trimmedValue.Length > 100)
-            return "Project name cannot exceed 100 characters.";
-
-        return new ProjectName(trimmedValue);
+        return trimmedValue.Length switch {
+            < 1 => "Project name must be at least 1 character long."
+          , > 100 => "Project name cannot exceed 100 characters."
+          , _ => new ProjectName(trimmedValue)
+        };
     }
 
     public static implicit operator string(ProjectName projectName) => projectName.Value;

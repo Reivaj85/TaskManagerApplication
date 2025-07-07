@@ -10,8 +10,7 @@ public class Project
     public ProjectName Name { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public bool IsDefault { get; private set; }
-
-    // Private constructor for Entity Framework and deserialization
+    
     private Project() { }
 
     private Project(Guid id, Guid userId, ProjectName name, DateTime createdAt, bool isDefault)

@@ -11,8 +11,7 @@ public class TaskItem
     public TaskDescription Description { get; private set; }
     public DateTime CreatedAt { get; private set; }
     public bool IsCompleted { get; private set; }
-
-    // Private constructor for Entity Framework and deserialization
+    
     private TaskItem() { }
 
     private TaskItem(Guid id, Guid projectId, TaskTitle title, TaskDescription description, DateTime createdAt, bool isCompleted)

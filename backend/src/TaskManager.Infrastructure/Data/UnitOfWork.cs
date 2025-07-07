@@ -1,7 +1,6 @@
 using TaskManager.Domain.Interfaces;
 using TaskManager.Infrastructure.Repositories;
 using System.Data;
-using Microsoft.Data.Sqlite;
 
 namespace TaskManager.Infrastructure.Data;
 
@@ -13,8 +12,7 @@ public class UnitOfWork : IUnitOfWork
     private readonly IDbConnection _connection;
     private IDbTransaction? _transaction;
     private bool _disposed = false;
-
-    // Lazy initialization of repositories
+    
     private Lazy<IUserRepository> _users;
     private Lazy<IProjectRepository> _projects;
     private Lazy<ITaskRepository> _tasks;
@@ -23,7 +21,6 @@ public class UnitOfWork : IUnitOfWork
     {
         _connection = connectionFactory.CreateConnection();
         
-        // Initialize lazy repositories
         _users = new Lazy<IUserRepository>(() => new UserRepository(_connection, _transaction));
         _projects = new Lazy<IProjectRepository>(() => new ProjectRepository(_connection, _transaction));
         _tasks = new Lazy<ITaskRepository>(() => new TaskRepository(_connection, _transaction));
@@ -89,8 +86,6 @@ public class UnitOfWork : IUnitOfWork
     /// <inheritdoc />
     public async Task<int> SaveChangesAsync()
     {
-        // In this implementation, changes are saved immediately
-        // This method exists for interface compliance and future extensibility
         await Task.CompletedTask;
         return 0; // Return 0 as changes are saved immediately in repository methods
     }
@@ -102,13 +97,13 @@ public class UnitOfWork : IUnitOfWork
         GC.SuppressFinalize(this);
     }
 
-    protected virtual void Dispose(bool disposing)
-    {
-        if (!_disposed && disposing)
-        {
-            _transaction?.Dispose();
-            _connection?.Dispose();
-            _disposed = true;
+    protected virtual void Dispose(bool disposing) {
+        if ( _disposed || !disposing ) {
+            return;
         }
+
+        _transaction?.Dispose();
+        _connection?.Dispose();
+        _disposed = true;
     }
 }

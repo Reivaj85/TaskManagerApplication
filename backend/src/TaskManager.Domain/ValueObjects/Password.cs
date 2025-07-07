@@ -22,13 +22,11 @@ public readonly record struct Password
         if (string.IsNullOrWhiteSpace(value))
             return "Password cannot be null or empty.";
 
-        if (value.Length < 6)
-            return "Password must be at least 6 characters long.";
-
-        if (value.Length > 100)
-            return "Password cannot exceed 100 characters.";
-
-        return new Password(value);
+        return value.Length switch {
+            < 6 => "Password must be at least 6 characters long."
+          , > 100 => "Password cannot exceed 100 characters."
+          , _ => new Password(value)
+        };
     }
 
     public static implicit operator string(Password password) => password.Value;

@@ -24,13 +24,11 @@ public readonly record struct UserName
 
         var trimmedValue = value.Trim();
 
-        if (trimmedValue.Length < 3)
-            return "Username must be at least 3 characters long.";
-
-        if (trimmedValue.Length > 50)
-            return "Username cannot exceed 50 characters.";
-
-        return new UserName(trimmedValue);
+        return trimmedValue.Length switch {
+            < 3 => "Username must be at least 3 characters long."
+          , > 50 => "Username cannot exceed 50 characters."
+          , _ => new UserName(trimmedValue)
+        };
     }
 
     public static implicit operator string(UserName userName) => userName.Value;

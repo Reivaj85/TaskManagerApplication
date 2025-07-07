@@ -24,13 +24,11 @@ public readonly record struct TaskTitle
 
         var trimmedValue = value.Trim();
 
-        if (trimmedValue.Length < 1)
-            return "Task title must be at least 1 character long.";
-
-        if (trimmedValue.Length > 200)
-            return "Task title cannot exceed 200 characters.";
-
-        return new TaskTitle(trimmedValue);
+        return trimmedValue.Length switch {
+            < 1 => "Task title must be at least 1 character long."
+          , > 200 => "Task title cannot exceed 200 characters."
+          , _ => new TaskTitle(trimmedValue)
+        };
     }
 
     public static implicit operator string(TaskTitle taskTitle) => taskTitle.Value;
