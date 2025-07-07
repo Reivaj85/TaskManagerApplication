@@ -24,9 +24,9 @@ public class AuthController : ControllerBase
         var result = await _authenticationService.RegisterAsync(request);
         
         if (result.IsSuccess)
-            return Ok(result.Value);
+            return Ok(result);
         
-        return BadRequest(new { Error = result.Error });
+        return BadRequest(result);
     }
 
     [HttpPost("login")]
@@ -38,7 +38,7 @@ public class AuthController : ControllerBase
         var result = await _authenticationService.LoginAsync(request);
         
         if (result.IsSuccess)
-            return Ok(result.Value);
+            return Ok(result);
         
         return Unauthorized(new { Error = result.Error });
     }

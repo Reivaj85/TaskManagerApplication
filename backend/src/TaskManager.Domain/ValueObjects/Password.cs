@@ -20,12 +20,12 @@ public readonly record struct Password
     public static Result<Password> Create(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            return "Password cannot be null or empty.";
+            return Result<Password>.Failure("Password cannot be empty.");
 
         return value.Length switch {
-            < 6 => "Password must be at least 6 characters long."
-          , > 100 => "Password cannot exceed 100 characters."
-          , _ => new Password(value)
+            < 6 => Result<Password>.Failure("Password must be at least 6 characters long.")
+          , > 100 => Result<Password>.Failure("Password must be at most 100 characters long.")
+          , _ => Result<Password>.Success(new Password(value))
         };
     }
 

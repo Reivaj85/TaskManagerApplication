@@ -31,7 +31,7 @@ public class ProjectsController : ControllerBase
         var result = await _projectService.GetUserProjectsAsync(userId);
         
         if (result.IsSuccess)
-            return Ok(result.Value);
+            return Ok(result);
         
         return BadRequest(new { Error = result.Error });
     }
@@ -43,7 +43,7 @@ public class ProjectsController : ControllerBase
         var result = await _projectService.GetProjectByIdAsync(projectId, userId);
         
         if (result.IsSuccess)
-            return Ok(result.Value);
+            return Ok(result);
         
         return NotFound(new { Error = result.Error });
     }
@@ -73,7 +73,7 @@ public class ProjectsController : ControllerBase
         var result = await _projectService.UpdateProjectAsync(projectId, userId, request);
         
         if (result.IsSuccess)
-            return Ok(result.Value);
+            return Ok(result);
         
         return NotFound(new { Error = result.Error });
     }

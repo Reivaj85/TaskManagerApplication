@@ -9,6 +9,7 @@ namespace TaskManager.Application.UseCases.Authentication;
 
 public interface IAuthenticationService
 {
+    Task<Result<LoginResponse>> GetUserByIdAsync(Guid userId);
     Task<Result<LoginResponse>> LoginAsync(LoginRequest request);
     Task<Result<RegisterResponse>> RegisterAsync(RegisterRequest request);
 }
@@ -22,6 +23,22 @@ public class AuthenticationService : IAuthenticationService
     {
         _unitOfWork = unitOfWork;
         _tokenService = tokenService;
+    }
+
+    public async Task<Result<LoginResponse>> GetUserByIdAsync(Guid userId) {
+        var user = await _unitOfWork.Users.GetByIdAsync(userId);
+        if (user == null)
+            return "User not found.";
+        
+        var token = _tokenService.GenerateToken(user.Id, user.UserName.Value);
+        var expiresAt = _tokenService.GetTokenExpiration();
+
+        return new LoginResponse
+        {
+            Token = token,
+            User = user.ToDto(),
+            ExpiresAt = expiresAt
+        };
     }
 
     public async Task<Result<LoginResponse>> LoginAsync(LoginRequest request)

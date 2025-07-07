@@ -23,6 +23,18 @@ public class TasksController : ControllerBase
         var userIdClaim = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
         return Guid.Parse(userIdClaim ?? throw new UnauthorizedAccessException("User ID not found in token"));
     }
+    
+    [HttpGet]
+    public async Task<IActionResult> GetUserTasks()
+    {
+        var userId = GetUserId();
+        var result = await _taskService.GetUserTasksAsync(userId);
+        
+        if (result.IsSuccess)
+            return Ok(result);
+        
+        return BadRequest(new { Error = result.Error });
+    }
 
     [HttpGet("project/{projectId:guid}")]
     public async Task<IActionResult> GetProjectTasks(Guid projectId)
@@ -31,7 +43,7 @@ public class TasksController : ControllerBase
         var result = await _taskService.GetProjectTasksAsync(projectId, userId);
         
         if (result.IsSuccess)
-            return Ok(result.Value);
+            return Ok(result);
         
         return BadRequest(new { Error = result.Error });
     }
@@ -43,7 +55,7 @@ public class TasksController : ControllerBase
         var result = await _taskService.GetTaskByIdAsync(taskId, userId);
         
         if (result.IsSuccess)
-            return Ok(result.Value);
+            return Ok(result);
         
         return NotFound(new { Error = result.Error });
     }
@@ -73,7 +85,7 @@ public class TasksController : ControllerBase
         var result = await _taskService.UpdateTaskAsync(taskId, userId, request);
         
         if (result.IsSuccess)
-            return Ok(result.Value);
+            return Ok(result);
         
         return NotFound(new { Error = result.Error });
     }

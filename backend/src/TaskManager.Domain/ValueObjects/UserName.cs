@@ -20,14 +20,14 @@ public readonly record struct UserName
     public static Result<UserName> Create(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            return "Username cannot be null or empty.";
+            return Result<UserName>.Failure("Username cannot be empty.");
 
         var trimmedValue = value.Trim();
 
         return trimmedValue.Length switch {
-            < 3 => "Username must be at least 3 characters long."
-          , > 50 => "Username cannot exceed 50 characters."
-          , _ => new UserName(trimmedValue)
+            < 3 => Result<UserName>.Failure("Username must be at least 3 characters long.")
+          , > 50 => Result<UserName>.Failure("Username cannot exceed 50 characters.")
+          , _ => Result<UserName>.Success(new UserName(trimmedValue))
         };
     }
 

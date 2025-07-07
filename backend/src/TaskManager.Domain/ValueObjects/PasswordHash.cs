@@ -19,9 +19,9 @@ public readonly record struct PasswordHash
     {
         var passwordHash = BCrypt.Net.BCrypt.HashPassword(value);
         if (string.IsNullOrWhiteSpace(passwordHash))
-            return "Failed to hash password.";
+            return Result<PasswordHash>.Failure("Failed to hash the password.");
 
-        return new PasswordHash(passwordHash);
+        return Result<PasswordHash>.Success(new PasswordHash(passwordHash));
     }
 
     /// <summary>
@@ -32,8 +32,8 @@ public readonly record struct PasswordHash
     public static Result<PasswordHash> CreateFromHash(string hashedValue)
     {
         if (string.IsNullOrWhiteSpace(hashedValue))
-            return "Password hash cannot be null or empty.";
+            return Result<PasswordHash>.Failure("Hashed value cannot be null or empty.");
 
-        return new PasswordHash(hashedValue);
+        return Result<PasswordHash>.Success(new PasswordHash(hashedValue));
     }
 }

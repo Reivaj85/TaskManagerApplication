@@ -20,14 +20,14 @@ public readonly record struct TaskTitle
     public static Result<TaskTitle> Create(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            return "Task title cannot be null or empty.";
+            return Result<TaskTitle>.Failure("Task title cannot be empty.");
 
         var trimmedValue = value.Trim();
 
         return trimmedValue.Length switch {
-            < 1 => "Task title must be at least 1 character long."
-          , > 200 => "Task title cannot exceed 200 characters."
-          , _ => new TaskTitle(trimmedValue)
+            < 1 => Result<TaskTitle>.Failure("Task title must be at least 1 character long.")
+          , > 200 => Result<TaskTitle>.Failure("Task title cannot exceed 200 characters.")
+          , _ => Result<TaskTitle>.Success(new TaskTitle(trimmedValue))
         };
     }
 

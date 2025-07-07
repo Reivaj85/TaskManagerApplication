@@ -34,24 +34,24 @@ public class TaskItem
     public static Result<TaskItem> New(Guid projectId, string title, string description = "")
     {
         if (projectId == Guid.Empty)
-            return "Project ID cannot be empty.";
+            return Result<TaskItem>.Failure("Project ID cannot be empty.");
 
         var titleResult = TaskTitle.Create(title);
         if (titleResult.IsFailure)
-            return titleResult.Error;
+            return Result<TaskItem>.Failure(titleResult.Error);
 
         var descriptionResult = TaskDescription.Create(description);
         if (descriptionResult.IsFailure)
-            return descriptionResult.Error;
+            return Result<TaskItem>.Failure(descriptionResult.Error);
 
-        return new TaskItem(
+        return Result<TaskItem>.Success( new TaskItem(
             id: Guid.NewGuid(),
             projectId: projectId,
             title: titleResult.Value,
             description: descriptionResult.Value,
             createdAt: DateTime.UtcNow,
             isCompleted: false
-        );
+        ));
     }
     
     public static Result<TaskItem> Create(
@@ -63,19 +63,20 @@ public class TaskItem
       , bool isCompleted)
     {
         if (id == Guid.Empty)
-            return "Task ID cannot be empty.";
+            return Result<TaskItem>.Failure("Task ID cannot be empty.");
     
         if (projectId == Guid.Empty)
-            return "Project ID cannot be empty.";
+            return Result<TaskItem>.Failure("Project ID cannot be empty.");
     
         if (string.IsNullOrEmpty(title))
-            return "Title cannot be null or empty.";
+            return Result<TaskItem>.Failure("Title cannot be null or empty.");
         
         if(createdAt == DateTime.MinValue)
-            return "CreatedAt cannot be the default value.";
-    
-        return new TaskItem(id: id, projectId: projectId, title: title, description: description, createdAt: createdAt
-                          , isCompleted: isCompleted);
+            return Result<TaskItem>.Failure("CreatedAt cannot be the default value.");
+
+        return Result<TaskItem>.Success(new TaskItem(id: id, projectId: projectId, title: title
+                                                   , description: description, createdAt: createdAt
+                                                   , isCompleted: isCompleted));
     }
 
     /// <summary>
@@ -88,11 +89,11 @@ public class TaskItem
     {
         var titleResult = TaskTitle.Create(title);
         if (titleResult.IsFailure)
-            return titleResult.Error;
+            return Result.Failure(titleResult.Error);
 
         var descriptionResult = TaskDescription.Create(description);
         if (descriptionResult.IsFailure)
-            return descriptionResult.Error;
+            return Result.Failure(descriptionResult.Error);
 
         Title = titleResult.Value;
         Description = descriptionResult.Value;
@@ -131,7 +132,7 @@ public class TaskItem
     public Result MoveToProject(Guid newProjectId)
     {
         if (newProjectId == Guid.Empty)
-            return "Project ID cannot be empty.";
+            return Result.Failure("New project ID cannot be empty.");
 
         ProjectId = newProjectId;
         return Result.Success();

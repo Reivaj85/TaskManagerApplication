@@ -22,9 +22,9 @@ public readonly record struct TaskDescription
         var trimmedValue = value?.Trim() ?? string.Empty;
 
         if (trimmedValue.Length > 1000)
-            return "Task description cannot exceed 1000 characters.";
+            return Result<TaskDescription>.Failure(trimmedValue);
 
-        return new TaskDescription(trimmedValue);
+        return Result<TaskDescription>.Success(new TaskDescription(trimmedValue));
     }
 
     public static implicit operator string(TaskDescription taskDescription) => taskDescription.Value;

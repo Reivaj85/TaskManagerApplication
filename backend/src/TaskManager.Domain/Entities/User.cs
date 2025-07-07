@@ -30,38 +30,34 @@ public class User
     {
         var usernameResult = UserName.Create(username);
         if (usernameResult.IsFailure)
-            return usernameResult.Error;
+            return Result<User>.Failure(usernameResult.Error);
 
         var passwordResult = Password.Create(password);
         if (passwordResult.IsFailure)
-            return passwordResult.Error;
+            return Result<User>.Failure(passwordResult.Error);
 
         var passwordHash = PasswordHash.Create(passwordResult.Value);
         if(passwordHash.IsFailure)
             return passwordHash.Error;
 
-        return new User(
-            id: Guid.NewGuid(),
-            username: usernameResult.Value,
-            passwordHash: passwordHash.Value,
-            createdAt: DateTime.UtcNow
-        );
+        return Result<User>.Success(new User(id: Guid.NewGuid(), username: usernameResult.Value
+                                           , passwordHash: passwordHash.Value, createdAt: DateTime.UtcNow));
     }
     
     public static Result<User> Create(Guid id, UserName username, PasswordHash passwordHash, DateTime createdAt) {
         if ( id == Guid.Empty )
-            return "Id cannot be empty.";
+            return Result<User>.Failure("ID cannot be empty.");
 
         if ( username == null )
-            return "Username cannot be null.";
+            return Result<User>.Failure("Username cannot be null.");
 
         if ( passwordHash == null )
-            return "Password hash cannot be null.";
+            return Result<User>.Failure("Password cannot be null.");
         
         if ( createdAt == default )
-            return "CreatedAt cannot be default value.";
+            return Result<User>.Failure("CreatedAt cannot be default value.");
 
-        return new User(id, username, passwordHash, createdAt);
+        return Result<User>.Success(new User(id, username, passwordHash, createdAt));
     }
 
     /// <summary>
@@ -82,11 +78,12 @@ public class User
     {
         var passwordResult = Password.Create(newPassword);
         if (passwordResult.IsFailure)
-            return passwordResult.Error;
+            return Result.Failure(passwordResult.Error);
 
         var passwordHashResult = PasswordHash.Create(passwordResult.Value);
-        if (passwordHashResult.IsFailure)
-            return passwordHashResult.Error;
+
+        if ( passwordHashResult.IsFailure )
+            return Result.Failure(passwordHashResult.Error);
 
         PasswordHash = passwordHashResult.Value;
         return Result.Success();

@@ -32,39 +32,29 @@ public class Project
     public static Result<Project> New(Guid userId, string name, bool isDefault = false)
     {
         if (userId == Guid.Empty)
-            return "User ID cannot be empty.";
+            return Result<Project>.Failure("User ID cannot be empty.");
 
         var nameResult = ProjectName.Create(name);
         if (nameResult.IsFailure)
-            return nameResult.Error;
+            return Result<Project>.Failure(nameResult.Error);
 
-        return new Project(
-            id: Guid.NewGuid(),
-            userId: userId,
-            name: nameResult.Value,
-            createdAt: DateTime.UtcNow,
-            isDefault: isDefault
-        );
+        return Result<Project>.Success(new Project(id: Guid.NewGuid(), userId: userId, name: nameResult.Value
+                                                 , createdAt: DateTime.UtcNow, isDefault: isDefault));
     }
     
     public static Result<Project> Create(Guid id, Guid userId, string name, DateTime createdAt, bool isDefault)
     {
         if (id == Guid.Empty)
-            return "Project ID cannot be empty.";
+            return Result<Project>.Failure("ID project cannot be empty.");
         if (userId == Guid.Empty)
-            return "User ID cannot be empty.";
+            return Result<Project>.Failure("User ID cannot be empty.");
 
         var nameResult = ProjectName.Create(name);
         if (nameResult.IsFailure)
-            return nameResult.Error;
+            return Result<Project>.Failure(nameResult.Error);
 
-        return new Project(
-            id: id,
-            userId: userId,
-            name: nameResult.Value,
-            createdAt: createdAt,
-            isDefault: isDefault
-        );
+        return Result<Project>.Success(new Project(id: id, userId: userId, name: nameResult.Value, createdAt: createdAt
+                                                 , isDefault: isDefault));
     }
 
     /// <summary>
@@ -86,7 +76,7 @@ public class Project
     {
         var nameResult = ProjectName.Create(newName);
         if (nameResult.IsFailure)
-            return nameResult.Error;
+            return Result.Failure(nameResult.Error);
 
         Name = nameResult.Value;
         return Result.Success();

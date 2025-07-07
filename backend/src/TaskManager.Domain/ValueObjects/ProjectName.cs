@@ -20,14 +20,17 @@ public readonly record struct ProjectName
     public static Result<ProjectName> Create(string value)
     {
         if (string.IsNullOrWhiteSpace(value))
-            return "Project name cannot be null or empty.";
+            return Result<ProjectName>.Failure(
+                "Project name cannot be null or whitespace.");
 
         var trimmedValue = value.Trim();
 
         return trimmedValue.Length switch {
-            < 1 => "Project name must be at least 1 character long."
-          , > 100 => "Project name cannot exceed 100 characters."
-          , _ => new ProjectName(trimmedValue)
+            < 1 => Result<ProjectName>.Failure(
+                "Project name must be at least 1 character long.")
+          , > 100 => Result<ProjectName>.Failure(
+                "Project name cannot exceed 100 characters.")
+          , _ => Result<ProjectName>.Success(new ProjectName(trimmedValue))
         };
     }
 
